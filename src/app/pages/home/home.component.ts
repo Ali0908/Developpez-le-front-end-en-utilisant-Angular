@@ -4,6 +4,8 @@ import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import Chart from 'chart.js/auto';
 import { Colors } from 'chart.js';
+import { ShareService } from 'src/app/core/services/share/share.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -15,13 +17,19 @@ export class HomeComponent implements OnInit {
   public chart:any;
   private olymCountries = [];
 
-  constructor(private olympicService: OlympicService, private elementRef:ElementRef) {}
+  constructor(
+    private olympicService: OlympicService,
+    private elementRef:ElementRef,
+    private shareSrv:ShareService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.olympicService.getOlympics().subscribe({
       next: (response) => {
         this.olympics = response;
-     console.log(this.olympics);
+      this.shareSrv.olympics = response;
+     this.createChart();
      this.createChart();
       }
     });
@@ -31,9 +39,9 @@ export class HomeComponent implements OnInit {
     let olymParticipations = [];    
     let olymMedals = [];
 
-    this.olymCountries = this.extractValues(this.olympics, 'country');    
-    olymParticipations = this.extractValues(this.olympics, 'participations');    
-    olymMedals = this.extractValues(this.olympics, 'medals');   
+    this.olymCountries = this.shareSrv.extractValues(this.olympics, 'country');    
+    olymParticipations = this.shareSrv.extractValues(this.olympics, 'participations');    
+    olymMedals = this.shareSrv.extractValues(this.olympics, 'medals');   
     
     let htmlRef = this.elementRef.nativeElement.querySelector(`#myChart`);
     
@@ -45,7 +53,7 @@ export class HomeComponent implements OnInit {
         labels: this.olymCountries, 
 	       datasets: [
           {
-            label: "Participations par pays",
+            label: "Medals",
             data: olymMedals,
             //backgroundColor: '#b42226'
           },
@@ -53,51 +61,15 @@ export class HomeComponent implements OnInit {
         ]
       },
       options: {
-        aspectRatio:2.5
+        aspectRatio:2.5,
+        onClick : (e) => {
+          this.router.navigate(['details']);
+        }
       }
     });
   }
 
-  /**
-   * Extract values faster than a map, map is 19ops/s, a loop...of is around 300ops/s
-   */
-  private extractValues(array:any[], field:string){
-    if(array && field){
-      if(field == 'medals'){
-        let countries = [];
-        let tab: any[] = [];
-        console.log('Tableau pre-traitement : ', array);
-        for(let item of array){
-          countries.push(item.country);
-          tab.push(item.participations);
-        }
-        console.log('Tableau post-traitement : ', tab);
-        const res:any = this.extractMedalsByCountries(tab, countries);
-        console.log('Résultat :', res);
-        return res;
-      }else{
-        let tab: any[] = [];
-        for(let item of array){
-          tab.push(item[field]);
-        }
-        return tab;
-      }
-    }else{
-      throw 'Array or field is undefined or null';
-    }
-  }
+  
 
-  private extractMedalsByCountries(tab:any, countries:any){
-    let values = [];
-    let counter = 0;
-
-    for(let item of tab){
-      counter = 0;
-      for(let i of item)
-        counter = counter + i.medalsCount;
-      values.push(counter);
-    }
-
-    return values;
-  }
+  
 }
