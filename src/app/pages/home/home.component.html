@@ -1,3 +1,22 @@
-<h2>Olympic games app</h2>
+<!-- <h2>Olympic games app</h2>
 <hr />
 <p>{{ (olympics$ | async)?.length }} data loaded</p>
+<div *ngFor=" let item of olympics$ |async">
+    <p>{{item.id}}</p>
+    <p>{{item.country}}</p>
+    <p>{{item.participations}}</p>
+</div> -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Chart.js example</title>
+  </head>
+  <body>
+    <!-- <div style="width: 500px;"><canvas id="dimensions"></canvas></div><br/> -->
+    <div style="width: 800px;"><canvas id="myChart"></canvas></div>
+
+    <!-- <script type="module" src="dimensions.js"></script> -->
+    <script type="module" src="acquisitions.js"></script>
+  </body>
+</html>
