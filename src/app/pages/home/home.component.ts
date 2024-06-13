@@ -28,9 +28,9 @@ export class HomeComponent implements OnInit {
     this.olympicService.getOlympics().subscribe({
       next: (response) => {
         this.olympics = response;
-      this.shareSrv.olympics = response;
-     this.createChart();
-     this.createChart();
+        this.shareSrv.olympics = response;
+        this.createChart();
+    //  this.createChart();
       }
     });
   }
@@ -39,11 +39,12 @@ export class HomeComponent implements OnInit {
     let olymParticipations = [];    
     let olymMedals = [];
 
-    this.olymCountries = this.shareSrv.extractValues(this.olympics, 'country');    
+    this.olymCountries = this.shareSrv.extractValues(this.olympics, 'countries');    
+    console.log('pays:', this.olymCountries);
     olymParticipations = this.shareSrv.extractValues(this.olympics, 'participations');    
     olymMedals = this.shareSrv.extractValues(this.olympics, 'medals');   
     
-    let htmlRef = this.elementRef.nativeElement.querySelector(`#myChart`);
+    let htmlRef = this.elementRef.nativeElement.querySelector(`#myfirstChart`);
     
     Chart.register(Colors);
 
@@ -62,9 +63,22 @@ export class HomeComponent implements OnInit {
       },
       options: {
         aspectRatio:2.5,
-        onClick : (e) => {
-          this.router.navigate(['details']);
+        /*
+        onClick : (e, legendItem, legend) => {
+          console.log('inside e:', e);
+          console.log('inside elements:', legendItem);
+          console.log('inside legend:', legend);
+
+         const countryId = 1; 
+          this.router.navigate(['/details' ,  countryId]);
         }
+        */
+        onClick: (event, elements) => {
+          const clickedElement = elements[0];
+          const countryId = clickedElement.index + 1;
+
+          this.router.navigate(['/details' ,  countryId]);
+      }
       }
     });
   }

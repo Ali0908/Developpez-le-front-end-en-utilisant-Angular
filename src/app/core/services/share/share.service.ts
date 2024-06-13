@@ -11,21 +11,41 @@ export class ShareService {
   /**
    * Extract values faster than a map, map is 19ops/s, a loop...of is around 300ops/s
    */
-  extractValues(array:any[], field:string){
+  extractValues(array:any[], field:string, countryId?:number){
     if(array && field){
       if(field == 'medals'){
         let countries = [];
         let tab: any[] = [];
-        console.log('Tableau pre-traitement : ', array);
         for(let item of array){
           countries.push(item.country);
           tab.push(item.participations);
         }
-        console.log('Tableau post-traitement : ', tab);
         const res:any = this.extractMedalsByCountries(tab, countries);
-        console.log('Résultat :', res);
         return res;
-      }else{
+      }
+      else if(field == 'countries'){
+        let tab:any[] = [];
+
+        for(let item of array){
+          tab.push(item.country);
+          //tab[item.id] = item.country;
+        }
+        console.log(tab);
+        return tab;
+      }
+      else if(field == 'country'){
+        if(countryId){
+
+        let tab:any[] = [];
+
+        for(let item of array){
+          if(item.id == countryId)
+            tab.push(item);
+        }
+        return tab;
+        }
+      }
+      else{
         let tab: any[] = [];
         for(let item of array){
           tab.push(item[field]);
