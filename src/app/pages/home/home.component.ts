@@ -54,10 +54,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  
-
-
-  createPieChart(): void {    
+  private createPieChart(): void {    
     let htmlRef = this.elementRef.nativeElement.querySelector(`#myfirstChart`);
       // Détruire le graphique existant (si présent)
       if (this.chart) {
