@@ -3,8 +3,8 @@ import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import Chart from 'chart.js/auto';
 import { Colors } from 'chart.js';
-import { ShareService } from 'src/app/core/services/share/share.service';
 import { Router } from '@angular/router';
+import { Observable, from, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -15,53 +15,64 @@ export class HomeComponent implements OnInit {
   // Typer correctement pas de any
   // Toutes les méthodes commentées
   public olympics: Olympic[] = [];
-  public chart!: Chart<"pie", any, never>;
-  private olymCountries = [];
+  public olympics$!: Observable<Olympic[]>;
+  private countries: string[] = [];
+  private medals: number[] = [];
+  public chart!: Chart<"pie", any, string>;
   public countCountries: number = 0;
   public countJOs: number = 0;
 
   constructor(
     private olympicService: OlympicService,
     private elementRef:ElementRef,
-    private shareSrv:ShareService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.olympicService.getOlympics().subscribe({
-      next: (response) => {
-        this.olympics = response;
-        this.countJOs = this.olympics.reduce((acc, olympic) => acc + olympic.participations.length, 0);
-        this.shareSrv.olympics = response;
-        this.createChart();
-        // this.countNbJOs();
-      }
+    this.olympics$ = this.olympicService.getOlympics();
+    this.loadData();
+  }
+
+  private loadData(): void {
+    this.olympics$.pipe(
+      tap((olympics) => {
+        this.olympics = olympics;
+        this.countJOs = olympics.reduce((acc, olympic) => acc + olympic.participations.length, 0);
+        this.countCountries = olympics.length;
+      }),
+      map((olympics) => ({
+        countries: olympics.map(olympic => olympic.country),
+        medals: olympics.map(olympic =>
+          olympic.participations.reduce((acc, participation) => acc + participation.medalsCount, 0)
+        )
+      }))
+    ).subscribe(({ countries, medals }) => {
+      this.countries = countries;
+      console.log(this.countries);
+      this.medals = medals;
+      this.createPieChart();
     });
   }
 
-  createChart(): void {
-    let olymParticipations = [];    
-    let olymMedals = [];
-    this.olymCountries = this.shareSrv.extractValues(this.olympics, 'countries');    
-    this.countCountries = this.olymCountries.length;
-    olymParticipations = this.shareSrv.extractValues(this.olympics, 'participations');    
-    olymMedals = this.shareSrv.extractValues(this.olympics, 'medals');   
-    
+  
+
+
+  createPieChart(): void {    
     let htmlRef = this.elementRef.nativeElement.querySelector(`#myfirstChart`);
       // Détruire le graphique existant (si présent)
-  if (this.chart) {
-    this.chart.destroy();
-  }
+      if (this.chart) {
+        this.chart.destroy();
+      }
     Chart.register(Colors);
 
     this.chart = new Chart(htmlRef, {
       type: 'pie',
       data: {
-        labels: this.olymCountries, 
+        labels: this.countries, 
 	      datasets: [
           {
             label: "Medals",
-            data: olymMedals,
+            data: this.medals,
         },
           
         ]
@@ -70,17 +81,12 @@ export class HomeComponent implements OnInit {
         aspectRatio:2.5,
         onClick: (event, elements) => {
           const clickedElement = elements[0];
-          const countryId = clickedElement.index + 1;
+          console.log('clickedElement', clickedElement);
+          const countryId = clickedElement.index;
           this.router.navigate(['/details' ,  countryId]);
       }
       }
     });
   }
-
-  // countNbJOs(){
-  // for (let item of this.olympics){
-  //   this.countJOs += item.participations.length;
-  //   console.log('participations:', this.countJOs);
-  // }
-  // }
+  
 }

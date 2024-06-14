@@ -3,15 +3,13 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class ShareService {
+export class SharedService {
   public olympics:any;
 
   constructor() { }
 
   // Méthode à revoir pour mieux la typer
-  // Créer un composant pour le graphique
-
-  getCountryById(){}
+  // 
 
   /**
    * Extract values faster than a map, map is 19ops/s, a loop...of is around 300ops/s

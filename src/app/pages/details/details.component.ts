@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { ShareService } from 'src/app/core/services/share/share.service';
+import { SharedService } from 'src/app/core/services/share/shared.service';
 import { Olympic } from 'src/app/core/models/Olympic';
 import Chart from 'chart.js/auto';
 import { Colors } from 'chart.js';
@@ -23,26 +23,26 @@ export class DetailsComponent implements OnInit {
   private countryId:number = 1;
 
   constructor(
-    private shareSrv:ShareService,
+    private sharedSrv:SharedService,
     private elementRef:ElementRef,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.olympics = this.shareSrv.olympics;
+    this.olympics = this.sharedSrv.olympics;
     this.fetchCountryIdFromUrl();
-    this.createChart2(); // Renomme la méthode, renvoie void 
+    this.createLineChart(); // Renomme la méthode, renvoie void 
   }
 
-  createChart2(): void{
+  createLineChart(): void{
     let countryDetails = [];
     let years = [];
     let medalsCounter = 0;
     let athletesCounter = 0;
     let values = [];
 
-    countryDetails = this.shareSrv.extractValues(this.olympics, 'country', this.countryId)[0];
+    countryDetails = this.sharedSrv.extractValues(this.olympics, 'country', this.countryId)[0];
 
     // Utilise Rxjs pour améliorer ce code
     
