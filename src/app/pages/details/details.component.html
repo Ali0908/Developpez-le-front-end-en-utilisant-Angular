@@ -1,28 +1,22 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <title>Chart.js example</title>
-  </head>
-  <body>
-    <!-- <div style="width: 500px;"><canvas id="dimensions"></canvas></div><br/> -->
+
     <button mat-raised-button color="primary" (click)="goBack()">Back</button>
+    <div class="container-component">
+      <div class="header">
     <div class="header-title">{{countryName}}</div>
-    <div class="header-container"> 
-        <div class="item">
-            <p>Number of entries</p>
-            <p><b>{{entries}}</b></p>
-        </div>
-        <div class="item">
-            <p>Total number medals</p>
-            <p><b>{{totalMedals}}</b></p>
-        </div>
-        <div class="item">
-            <p>Total number of athletes</p>
-            <p><b>{{totalAthletes}}</b></p>
-        </div>
+      <div class="header-container"> 
+            <div class="item">
+                  <p>Number of entries</p>
+                  <p><b>{{entries}}</b></p>
+            </div>
+            <div class="item">
+                  <p>Total number medals</p>
+                  <p><b>{{totalMedals}}</b></p>
+            </div>
+            <div class="item">
+                  <p>Total number of athletes</p>
+                  <p><b>{{totalAthletes}}</b></p>
+            </div>
+      </div>
     </div>
     <div style="width: 800px;margin: 0 auto;"><canvas id="myChart" width="600" height="600"></canvas></div>
-    <!-- <script type="module" src="dimensions.js"></script> -->
-    <script type="module" src="acquisitions.js"></script>
-  </body>
-</html>
+  </div>

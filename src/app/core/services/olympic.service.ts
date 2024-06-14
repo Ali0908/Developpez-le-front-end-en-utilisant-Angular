@@ -9,7 +9,7 @@ import { Olympic } from '../models/Olympic';
 })
 export class OlympicService {
   private olympicUrl = './assets/mock/olympic.json';
-  private olympics$ = new BehaviorSubject<Olympic[] | null>(null);
+  private olympics$ = new BehaviorSubject<Olympic[]>([]);
 
   constructor(private http: HttpClient) {}
 
@@ -20,8 +20,9 @@ export class OlympicService {
         // TODO: improve error handling
         console.error(error);
         // can be useful to end loading state and let the user know something went wrong
-        this.olympics$.next(null);
+        this.olympics$.next([]);
         return throwError(() => new Error('Failed to load Olympic data'));
+        // Afficher en alerte l'erreur dans app.component
       })
     );
   }

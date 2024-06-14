@@ -1,5 +1,4 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import Chart from 'chart.js/auto';
@@ -13,8 +12,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public olympics: any;
-  public chart:any;
+  // Typer correctement pas de any
+  // Toutes les méthodes commentées
+  public olympics: Olympic[] = [];
+  public chart!: Chart<"pie", any, never>;
   private olymCountries = [];
   public countCountries: number = 0;
   public countJOs: number = 0;
@@ -30,24 +31,27 @@ export class HomeComponent implements OnInit {
     this.olympicService.getOlympics().subscribe({
       next: (response) => {
         this.olympics = response;
+        this.countJOs = this.olympics.reduce((acc, olympic) => acc + olympic.participations.length, 0);
         this.shareSrv.olympics = response;
         this.createChart();
-        this.countNbJOs();
+        // this.countNbJOs();
       }
     });
   }
 
-  createChart(){
+  createChart(): void {
     let olymParticipations = [];    
     let olymMedals = [];
-    console.log('pays:', this.olympics);
     this.olymCountries = this.shareSrv.extractValues(this.olympics, 'countries');    
     this.countCountries = this.olymCountries.length;
     olymParticipations = this.shareSrv.extractValues(this.olympics, 'participations');    
     olymMedals = this.shareSrv.extractValues(this.olympics, 'medals');   
     
     let htmlRef = this.elementRef.nativeElement.querySelector(`#myfirstChart`);
-    
+      // Détruire le graphique existant (si présent)
+  if (this.chart) {
+    this.chart.destroy();
+  }
     Chart.register(Colors);
 
     this.chart = new Chart(htmlRef, {
@@ -58,8 +62,7 @@ export class HomeComponent implements OnInit {
           {
             label: "Medals",
             data: olymMedals,
-            //backgroundColor: '#b42226'
-          },
+        },
           
         ]
       },
@@ -68,20 +71,16 @@ export class HomeComponent implements OnInit {
         onClick: (event, elements) => {
           const clickedElement = elements[0];
           const countryId = clickedElement.index + 1;
-
           this.router.navigate(['/details' ,  countryId]);
       }
       }
     });
   }
 
-  countNbJOs(){
-  for (let item of this.olympics){
-    this.countJOs += item.participations.length;
-    console.log('participations:', this.countJOs);
-  }
-  }
-  
-
-  
+  // countNbJOs(){
+  // for (let item of this.olympics){
+  //   this.countJOs += item.participations.length;
+  //   console.log('participations:', this.countJOs);
+  // }
+  // }
 }

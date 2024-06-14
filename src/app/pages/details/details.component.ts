@@ -1,8 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ShareService } from 'src/app/core/services/share/share.service';
-import { Observable, of } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
-import { OlympicService } from 'src/app/core/services/olympic.service';
 import Chart from 'chart.js/auto';
 import { Colors } from 'chart.js';
 import {ActivatedRoute, Router} from "@angular/router";
@@ -14,7 +12,8 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit {
-  public olympics: any;
+  // Typer les any
+  public olympics: Olympic[] = [];
   public chart:any;
   public entries:number = 0;
   public totalMedals:number = 0;
@@ -26,7 +25,6 @@ export class DetailsComponent implements OnInit {
   constructor(
     private shareSrv:ShareService,
     private elementRef:ElementRef,
-    private olympicService:OlympicService,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
@@ -34,10 +32,10 @@ export class DetailsComponent implements OnInit {
   ngOnInit(): void {
     this.olympics = this.shareSrv.olympics;
     this.fetchCountryIdFromUrl();
-    this.createChart2();
+    this.createChart2(); // Renomme la méthode, renvoie void 
   }
 
-  createChart2(){
+  createChart2(): void{
     let countryDetails = [];
     let years = [];
     let medalsCounter = 0;
@@ -45,6 +43,8 @@ export class DetailsComponent implements OnInit {
     let values = [];
 
     countryDetails = this.shareSrv.extractValues(this.olympics, 'country', this.countryId)[0];
+
+    // Utilise Rxjs pour améliorer ce code
     
     if(countryDetails.participations){
       for(let p of countryDetails.participations){

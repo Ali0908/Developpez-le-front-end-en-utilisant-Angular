@@ -8,10 +8,17 @@ export class ShareService {
 
   constructor() { }
 
+  // Méthode à revoir pour mieux la typer
+  // Créer un composant pour le graphique
+
+  getCountryById(){}
+
   /**
    * Extract values faster than a map, map is 19ops/s, a loop...of is around 300ops/s
    */
   extractValues(array:any[], field:string, countryId?:number){
+
+    // Utilise reduce rxjs pour améliorer ce code
     if(array && field){
       if(field == 'medals'){
         let countries = [];
