@@ -16,6 +16,8 @@ export class HomeComponent implements OnInit {
   public olympics: any;
   public chart:any;
   private olymCountries = [];
+  public countCountries: number = 0;
+  public countJOs: number = 0;
 
   constructor(
     private olympicService: OlympicService,
@@ -30,7 +32,7 @@ export class HomeComponent implements OnInit {
         this.olympics = response;
         this.shareSrv.olympics = response;
         this.createChart();
-    //  this.createChart();
+        this.countNbJOs();
       }
     });
   }
@@ -38,9 +40,9 @@ export class HomeComponent implements OnInit {
   createChart(){
     let olymParticipations = [];    
     let olymMedals = [];
-
+    console.log('pays:', this.olympics);
     this.olymCountries = this.shareSrv.extractValues(this.olympics, 'countries');    
-    console.log('pays:', this.olymCountries);
+    this.countCountries = this.olymCountries.length;
     olymParticipations = this.shareSrv.extractValues(this.olympics, 'participations');    
     olymMedals = this.shareSrv.extractValues(this.olympics, 'medals');   
     
@@ -52,7 +54,7 @@ export class HomeComponent implements OnInit {
       type: 'pie',
       data: {
         labels: this.olymCountries, 
-	       datasets: [
+	      datasets: [
           {
             label: "Medals",
             data: olymMedals,
@@ -63,16 +65,6 @@ export class HomeComponent implements OnInit {
       },
       options: {
         aspectRatio:2.5,
-        /*
-        onClick : (e, legendItem, legend) => {
-          console.log('inside e:', e);
-          console.log('inside elements:', legendItem);
-          console.log('inside legend:', legend);
-
-         const countryId = 1; 
-          this.router.navigate(['/details' ,  countryId]);
-        }
-        */
         onClick: (event, elements) => {
           const clickedElement = elements[0];
           const countryId = clickedElement.index + 1;
@@ -83,6 +75,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  countNbJOs(){
+  for (let item of this.olympics){
+    this.countJOs += item.participations.length;
+    console.log('participations:', this.countJOs);
+  }
+  }
   
 
   
