@@ -4,7 +4,8 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 import Chart from 'chart.js/auto';
 import { Colors } from 'chart.js';
 import { Router } from '@angular/router';
-import { Observable, from, map, tap } from 'rxjs';
+import { Observable} from 'rxjs';
+import { SharedService } from 'src/app/core/services/share/shared.service';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +13,6 @@ import { Observable, from, map, tap } from 'rxjs';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  // Typer correctement pas de any
-  // Toutes les méthodes commentées
   public olympics: Olympic[] = [];
   public olympics$!: Observable<Olympic[]>;
   private countries: string[] = [];
@@ -25,31 +24,21 @@ export class HomeComponent implements OnInit {
   constructor(
     private olympicService: OlympicService,
     private elementRef:ElementRef,
-    private router: Router
+    private router: Router,
+    private sharedService: SharedService
   ) {}
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
     this.loadData();
   }
-
   private loadData(): void {
-    this.olympics$.pipe(
-      tap((olympics) => {
-        this.olympics = olympics;
-        this.countJOs = olympics.reduce((acc, olympic) => acc + olympic.participations.length, 0);
-        this.countCountries = olympics.length;
-      }),
-      map((olympics) => ({
-        countries: olympics.map(olympic => olympic.country),
-        medals: olympics.map(olympic =>
-          olympic.participations.reduce((acc, participation) => acc + participation.medalsCount, 0)
-        )
-      }))
-    ).subscribe(({ countries, medals }) => {
+    this.sharedService.loadData().subscribe(({ countries, medals, olympics, countJOs, countCountries }) => {
       this.countries = countries;
-      console.log(this.countries);
       this.medals = medals;
+      this.olympics = olympics;
+      this.countJOs = countJOs;
+      this.countCountries = countCountries;
       this.createPieChart();
     });
   }

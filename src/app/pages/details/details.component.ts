@@ -12,15 +12,20 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./details.component.scss']
 })
 export class DetailsComponent implements OnInit {
-  // Typer les any
-  public olympics: Olympic[] = [];
-  public chart:any;
+  public chart!: Chart<"pie", any, string>;
   public entries:number = 0;
-  public totalMedals:number = 0;
-  public totalAthletes:number = 0;
+  public totalMedalsPerCountry:number = 0;
+  public totalAthletesPerCountry:number = 0;
   public countryName:string = '';
+  private countries: string[] = [];
+  private countryId:number = 0;
+  public countrySelected: string = '';
+  public olympics: Olympic[] = [];
+  public years: number[] = [];
+  public medalsPerCountry: number[] = [];
+  public matchCountries: Olympic = {id: 0, country: '', participations: []};
 
-  private countryId:number = 1;
+
 
   constructor(
     private sharedSrv:SharedService,
@@ -30,81 +35,65 @@ export class DetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.olympics = this.sharedSrv.olympics;
     this.fetchCountryIdFromUrl();
-    this.createLineChart(); // Renomme la méthode, renvoie void 
+    this.loadData();
   }
 
-  createLineChart(): void{
-    let countryDetails = [];
-    let years = [];
-    let medalsCounter = 0;
-    let athletesCounter = 0;
-    let values = [];
+  private loadData(): void {
+    this.sharedSrv.loadData().subscribe(({ countries, olympics, years }) => {
+      this.countries = countries;
+      this.olympics = olympics;
+      this.countrySelected = this.countries[this.countryId];
+      this.years = years;
+      this.matchCountries = this.olympics.find(olympic => olympic.country === this.countrySelected)!;
+      this.entries = this.matchCountries.participations.length;
+      this.getAthletesPerCountry();
+      this.getMedalsPerCountry();
+      this.createLineChart();
+    });
+  }
 
-    countryDetails = this.sharedSrv.extractValues(this.olympics, 'country', this.countryId)[0];
+  private getMedalsPerCountry(): number[] {
+    this.medalsPerCountry = this.matchCountries.participations.map((participation: { medalsCount: number; }) => participation.medalsCount);
+    this.totalMedalsPerCountry = this.medalsPerCountry.reduce((acc, medals) => acc + medals, 0);
+    this.medalsPerCountry.unshift(0);
+    return this.medalsPerCountry;
+  }
 
-    // Utilise Rxjs pour améliorer ce code
+  private getAthletesPerCountry(): number {
+    return this.totalAthletesPerCountry = this.matchCountries.participations.reduce((acc, participation: { athleteCount: number; }) => acc + participation.athleteCount, 0);
     
-    if(countryDetails.participations){
-      for(let p of countryDetails.participations){
-        if(p.year)
-          years.push(p.year);
-        if(p.medalsCount)
-          medalsCounter = medalsCounter + p.medalsCount;
-        if(p.athleteCount)
-          athletesCounter = athletesCounter + p.athleteCount
-
-        if(p.medalsCount)
-          values.push(p.medalsCount);
-        else
-          values.push(0);
-      }
-    }
-
-    // Make the graph start at 0 not another number
-    values.unshift(0);
-    years.unshift(0);
-
-    this.countryName = countryDetails.country;
-    this.entries = countryDetails.participations.length;
-    this.totalMedals = medalsCounter;
-    this.totalAthletes = athletesCounter;
-
-    let htmlRef = this.elementRef.nativeElement.querySelector(`#myChart`);
-    
-    Chart.register(Colors);
-
-    // Si besoin de faire un multi-axis : https://www.chartjs.org/docs/latest/samples/line/multi-axis.html
-    const data = {
-      labels: years,
-      datasets: [
-        {
-          label: 'Médailles obtenues',
-          data: values,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
-        }
-      ]
-    };
-
-    const config:any = {
-      type: 'line',
-      data: data,
-    };
-
-    this.chart = new Chart(htmlRef, config);
-
   }
   
-  fetchCountryIdFromUrl() {
+  fetchCountryIdFromUrl(): void {
     this.activatedRoute.params.subscribe(params => {
       this.countryId = params['id']; // Extract the ID from the URL parameters
     });
   }
-  goBack(){
+  goBack(): void {
     this.router.navigate(['']);
   }
-
-}
+  createLineChart(): void {
+      let htmlRef = this.elementRef.nativeElement.querySelector(`#myChart`);
+      
+      Chart.register(Colors);
+      // Si besoin de faire un multi-axis : https://www.chartjs.org/docs/latest/samples/line/multi-axis.html
+      const data = {
+        labels: this.years,
+        datasets: [
+          {
+            label: 'Médailles obtenues',
+            data: this.medalsPerCountry,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }
+        ]
+      };
+      const config:any = {
+        type: 'line',
+        data: data,
+      };
+      this.chart = new Chart(htmlRef, config);
+    }
+  }

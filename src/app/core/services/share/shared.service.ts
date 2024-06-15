@@ -1,78 +1,35 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OlympicService } from '../olympic.service';
+import { Olympic } from '../../models/Olympic';
+import { map, tap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-  public olympics:any;
 
-  constructor() { }
+  constructor(private olympicService: OlympicService) { }
 
-  // Méthode à revoir pour mieux la typer
-  // 
-
-  /**
-   * Extract values faster than a map, map is 19ops/s, a loop...of is around 300ops/s
-   */
-  extractValues(array:any[], field:string, countryId?:number){
-
-    // Utilise reduce rxjs pour améliorer ce code
-    if(array && field){
-      if(field == 'medals'){
-        let countries = [];
-        let tab: any[] = [];
-        for(let item of array){
-          countries.push(item.country);
-          tab.push(item.participations);
-        }
-        const res:any = this.extractMedalsByCountries(tab, countries);
-        return res;
-      }
-      else if(field == 'countries'){
-        let tab:any[] = [];
-
-        for(let item of array){
-          tab.push(item.country);
-          //tab[item.id] = item.country;
-        }
-        console.log(tab);
-        return tab;
-      }
-      else if(field == 'country'){
-        if(countryId){
-
-        let tab:any[] = [];
-
-        for(let item of array){
-          if(item.id == countryId)
-            tab.push(item);
-        }
-        return tab;
-        }
-      }
-      else{
-        let tab: any[] = [];
-        for(let item of array){
-          tab.push(item[field]);
-        }
-        return tab;
-      }
-    }else{
-      throw 'Array or field is undefined or null';
-    }
-  }
-
-  private extractMedalsByCountries(tab:any, countries:any){
-    let values = [];
-    let counter = 0;
-
-    for(let item of tab){
-      counter = 0;
-      for(let i of item)
-        counter = counter + i.medalsCount;
-      values.push(counter);
-    }
-
-    return values;
+  public loadData(): Observable<{ countries: string[], medals: number[], olympics: Olympic[],
+    countJOs: number, countCountries: number, years: number[] }> {
+    return this.olympicService.getOlympics().pipe(
+      tap((olympics) => {
+        console.log('Fetched Olympics:', olympics);
+      }),
+      map((olympics) => {
+        const countries = olympics.map(olympic => olympic.country);
+        const medals = olympics.map(olympic =>
+          olympic.participations.reduce((acc, participation) => acc + participation.medalsCount, 0)
+        );
+        const countJOs = olympics.reduce((acc, olympic) => acc + olympic.participations.length, 0);
+        const countCountries = olympics.length;
+        let years = olympics.map(olympic => olympic.participations.map(participation => participation.year)).flat();
+        years = Array.from(new Set(years));
+        years.unshift(0);
+        return { countries, medals, olympics, countJOs, countCountries, years };
+      })
+    );
   }
 }
