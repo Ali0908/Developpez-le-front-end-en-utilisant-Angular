@@ -1,16 +1,10 @@
-// body{
-//     font-family: Arial, Helvetica, sans-serif;
-// }
-
 .line-chart{
         display: flex;
-        justify-content: center;
         align-items: center;
-        height: 162vh;
-        width: 100vw;
+        justify-content: center;
+        width: 60%;
 }
-#myChart{
-        width: auto;
-        height: auto;
-        margin:  0 auto;
-}
+#myChart {
+        width: 100%;  /* Fills entire grid area */
+        height: 100%; /* Fills entire grid area */
+      }
