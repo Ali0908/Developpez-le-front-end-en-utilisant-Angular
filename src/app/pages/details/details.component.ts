@@ -38,6 +38,20 @@ export class DetailsComponent implements OnInit {
     this.fetchCountryIdFromUrl();
     this.loadData();
   }
+  // private handleRouting( countries: string[]): boolean {
+  //    let matchRoutes = false;
+  //    for ( let country of countries){
+  //     const index = countries.indexOf(country);
+  //     if (index == this.countryId){
+  //     return  matchRoutes = true;
+  //     } else {
+  //       this.router.navigate(['/**']);
+  //     return  matchRoutes = false;
+       
+  //     }
+
+  //    }
+  // }
 
   private loadData(): void {
     this.sharedSrv.loadData().subscribe(({ countries, olympics, years }) => {
@@ -46,11 +60,12 @@ export class DetailsComponent implements OnInit {
       this.countrySelected = this.countries[this.countryId];
       this.years = years;
       this.matchCountries = this.olympics.find(olympic => olympic.country === this.countrySelected)!;
-      this.entries = this.matchCountries.participations.length;
-      this.getAthletesPerCountry();
-      this.getMedalsPerCountry();
-      this.createLineChart();
-    });
+        this.entries = this.matchCountries.participations.length;
+        // this.handleRouting(this.countries);
+        this.getAthletesPerCountry();
+        this.getMedalsPerCountry();
+        this.createLineChart();
+       });
   }
 
   private getMedalsPerCountry(): number[] {
@@ -66,10 +81,13 @@ export class DetailsComponent implements OnInit {
   }
   
   fetchCountryIdFromUrl(): void {
+    let countryToString = '';
     this.activatedRoute.params.subscribe(params => {
-      this.countryId = params['id']; // Extract the ID from the URL parameters
+      countryToString = params['id']; // Extract the ID from the URL parameters
+      this.countryId = parseInt(countryToString);
     });
   }
+
   goBack(): void {
     this.router.navigate(['']);
   }

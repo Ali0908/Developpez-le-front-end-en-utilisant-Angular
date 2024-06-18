@@ -67,7 +67,6 @@ export class HomeComponent implements OnInit {
         aspectRatio:2.5,
         onClick: (event, elements) => {
           const clickedElement = elements[0];
-          console.log('clickedElement', clickedElement);
           const countryId = clickedElement.index;
           this.router.navigate(['/details' ,  countryId]);
       }
@@ -76,3 +75,4 @@ export class HomeComponent implements OnInit {
   }
   
 }
+
