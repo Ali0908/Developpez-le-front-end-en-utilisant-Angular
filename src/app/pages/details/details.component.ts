@@ -38,20 +38,17 @@ export class DetailsComponent implements OnInit {
     this.fetchCountryIdFromUrl();
     this.loadData();
   }
-  // private handleRouting( countries: string[]): boolean {
-  //    let matchRoutes = false;
-  //    for ( let country of countries){
-  //     const index = countries.indexOf(country);
-  //     if (index == this.countryId){
-  //     return  matchRoutes = true;
-  //     } else {
-  //       this.router.navigate(['/**']);
-  //     return  matchRoutes = false;
-       
-  //     }
-
-  //    }
-  // }
+  private handleRouting(countries: string[] | undefined): void {
+    if (!countries) {
+      this.router.navigate(['/**'])
+      return; // Do nothing if countries is undefined
+    }
+    const countryFound = countries.some(country => country === this.countrySelected);
+    if (!countryFound) {
+      this.router.navigate(['/**']); // Redirect to desired page
+    }
+  }
+  
 
   private loadData(): void {
     this.sharedSrv.loadData().subscribe(({ countries, olympics, years }) => {
@@ -59,9 +56,9 @@ export class DetailsComponent implements OnInit {
       this.olympics = olympics;
       this.countrySelected = this.countries[this.countryId];
       this.years = years;
+      this.handleRouting(this.countries);
       this.matchCountries = this.olympics.find(olympic => olympic.country === this.countrySelected)!;
         this.entries = this.matchCountries.participations.length;
-        // this.handleRouting(this.countries);
         this.getAthletesPerCountry();
         this.getMedalsPerCountry();
         this.createLineChart();
