@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { SharedService } from 'src/app/core/services/share/shared.service';
 import { Olympic } from 'src/app/core/models/Olympic';
 import Chart from 'chart.js/auto';
@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss']
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnChanges {
   public chart!: Chart<"pie", any, string>;
   public entries:number = 0;
   public totalMedalsPerCountry:number = 0;
@@ -33,20 +33,31 @@ export class DetailsComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['countryId']){
+      this.fetchCountryIdFromUrl();
+      this.loadData();
+    };
+  }
 
   ngOnInit(): void {
     this.fetchCountryIdFromUrl();
     this.loadData();
   }
+  /*
+  TODO: Voir avec mentor comment éviter d'utiliser un undefined en paramètre de countries
+  comprendre pourquoi on ne peut pas retaper une url valide lorsque j'ai saisi une url invalide préalablement
+  */
   private handleRouting(countries: string[] | undefined): void {
     if (!countries) {
       this.router.navigate(['/**'])
       return; // Do nothing if countries is undefined
     }
     const countryFound = countries.some(country => country === this.countrySelected);
-    if (!countryFound) {
-      this.router.navigate(['/**']); // Redirect to desired page
+    if (countryFound) {
+      return; // Redirect to desired page
     }
+    this.router.navigate(['/**']);
   }
   
 
