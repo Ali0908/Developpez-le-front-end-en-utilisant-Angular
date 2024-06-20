@@ -44,10 +44,7 @@ export class DetailsComponent implements OnInit, OnChanges {
     this.fetchCountryIdFromUrl();
     this.loadData();
   }
-  /*
-  TODO: Voir avec mentor comment éviter d'utiliser un undefined en paramètre de countries
-  comprendre pourquoi on ne peut pas retaper une url valide lorsque j'ai saisi une url invalide préalablement
-  */
+  
   private handleRouting(countries: string[]): void {
     if(countries?.length > 0){
       const countryFound = countries.some(country => country === this.countrySelected);

@@ -1,10 +1,6 @@
 .line-chart{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 60%;
+        position: relative;
+        margin: auto;
+        height: 80vh;
+        width: 80vw;
 }
-#myChart {
-        width: 100%;  /* Fills entire grid area */
-        height: 100%; /* Fills entire grid area */
-      }
