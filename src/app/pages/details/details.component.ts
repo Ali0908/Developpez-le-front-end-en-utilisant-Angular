@@ -33,8 +33,8 @@ export class DetailsComponent implements OnInit, OnChanges {
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) { }
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes['countryId']){
+  ngOnChanges(): void {
+    if(this.countryId){
       this.fetchCountryIdFromUrl();
       this.loadData();
     };
@@ -48,16 +48,14 @@ export class DetailsComponent implements OnInit, OnChanges {
   TODO: Voir avec mentor comment éviter d'utiliser un undefined en paramètre de countries
   comprendre pourquoi on ne peut pas retaper une url valide lorsque j'ai saisi une url invalide préalablement
   */
-  private handleRouting(countries: string[] | undefined): void {
-    if (!countries) {
-      this.router.navigate(['/**'])
-      return; // Do nothing if countries is undefined
+  private handleRouting(countries: string[]): void {
+    if(countries?.length > 0){
+      const countryFound = countries.some(country => country === this.countrySelected);
+      if (countryFound) {
+        return; // Redirect to desired page
+      }
+      this.router.navigate(['/**']);
     }
-    const countryFound = countries.some(country => country === this.countrySelected);
-    if (countryFound) {
-      return; // Redirect to desired page
-    }
-    this.router.navigate(['/**']);
   }
   
 
@@ -88,7 +86,7 @@ export class DetailsComponent implements OnInit, OnChanges {
     
   }
   
-  fetchCountryIdFromUrl(): void {
+  private fetchCountryIdFromUrl(): void {
     let countryToString = '';
     this.activatedRoute.params.subscribe(params => {
       countryToString = params['id']; // Extract the ID from the URL parameters
@@ -99,7 +97,7 @@ export class DetailsComponent implements OnInit, OnChanges {
   goBack(): void {
     this.router.navigate(['']);
   }
-  createLineChart(): void {
+  private createLineChart(): void {
       let htmlRef = this.elementRef.nativeElement.querySelector(`#myChart`);
       
       Chart.register(Colors);
