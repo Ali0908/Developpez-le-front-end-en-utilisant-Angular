@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { SharedService } from 'src/app/core/services/share/shared.service';
 import { Olympic } from 'src/app/core/models/Olympic';
 import Chart from 'chart.js/auto';
