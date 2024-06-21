@@ -45,6 +45,16 @@ export class DetailsComponent implements OnInit, OnChanges {
     this.loadData();
   }
   
+  /**
+ * Handles routing based on the validity of the selected country.
+ *
+ * This method checks if the selected country exists in the list of countries. If the country exists,
+ * it allows further processing. If the country does not exist, it redirects to a 404 page.
+ *
+ * @param countries An array of country names.
+ * 
+ * @return void
+ */
   private handleRouting(countries: string[]): void {
     if(countries?.length > 0){
       const countryFound = countries.some(country => country === this.countrySelected);
@@ -55,7 +65,15 @@ export class DetailsComponent implements OnInit, OnChanges {
     }
   }
   
-
+/**
+ * Loads and processes data related to the Olympics for the selected country.
+ * 
+ * This method fetches data using the shared service, processes it to extract the necessary details, 
+ * and updates the component's state with the relevant information. It also handles routing based on 
+ * the validity of the selected country.
+ *
+ * @return void
+ */
   private loadData(): void {
     this.sharedSrv.loadData().subscribe(({ countries, olympics, years }) => {
       this.countries = countries;

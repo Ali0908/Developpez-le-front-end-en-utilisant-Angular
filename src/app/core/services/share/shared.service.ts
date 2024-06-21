@@ -12,6 +12,18 @@ export class SharedService {
 
   constructor(private olympicService: OlympicService) { }
 
+/**
+ * Loads and processes data related to the Olympics.
+ *
+ * @return Observable<{ countries: string[], medals: number[], olympics: Olympic[],
+ * countJOs: number, countCountries: number, years: number[] }> - An observable that emits an object containing:
+ * - countries: an array of country names
+ * - medals: an array of total medal counts for each country
+ * - olympics: the original array of Olympic data
+ * - countJOs: the total number of participations across all Olympics
+ * - countCountries: the total number of countries
+ * - years: an array of unique years in which the Olympics took place, with a 0 prepended
+ */
   public loadData(): Observable<{ countries: string[], medals: number[], olympics: Olympic[],
     countJOs: number, countCountries: number, years: number[] }> {
     return this.olympicService.getOlympics().pipe(
