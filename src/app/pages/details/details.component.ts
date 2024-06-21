@@ -44,7 +44,7 @@ export class DetailsComponent implements OnInit, OnChanges {
     this.fetchCountryIdFromUrl();
     this.loadData();
   }
-  
+
   /**
  * Handles routing based on the validity of the selected country.
  *
@@ -59,7 +59,7 @@ export class DetailsComponent implements OnInit, OnChanges {
     if(countries?.length > 0){
       const countryFound = countries.some(country => country === this.countrySelected);
       if (countryFound) {
-        return; // Redirect to desired page
+        return; // Redirect to details page
       }
       this.router.navigate(['/**']);
     }
@@ -105,10 +105,10 @@ export class DetailsComponent implements OnInit, OnChanges {
   }
   
   private fetchCountryIdFromUrl(): void {
-    let countryToString = '';
+    let countryInString = '';
     this.activatedRoute.params.subscribe(params => {
-      countryToString = params['id']; // Extract the ID from the URL parameters
-      this.countryId = parseInt(countryToString);
+      countryInString = params['id']; // Extract the ID from the URL parameters
+      this.countryId = parseInt(countryInString);
     });
   }
 
@@ -119,7 +119,6 @@ export class DetailsComponent implements OnInit, OnChanges {
       let htmlRef = this.elementRef.nativeElement.querySelector(`#myChart`);
       
       Chart.register(Colors);
-      // Si besoin de faire un multi-axis : https://www.chartjs.org/docs/latest/samples/line/multi-axis.html
       const data = {
         labels: this.years,
         datasets: [

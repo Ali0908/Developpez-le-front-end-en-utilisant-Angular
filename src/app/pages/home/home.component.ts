@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
     this.olympics$ = this.olympicService.getOlympics();
     this.loadData();
   }
-  
+
   /**
  * Loads and processes data related to the Olympics.
  * 
@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit {
 
   private createPieChart(): void {    
     let htmlRef = this.elementRef.nativeElement.querySelector(`#myfirstChart`);
-      // Détruire le graphique existant (si présent)
+      // Destroy the graphic if it already exists
       if (this.chart) {
         this.chart.destroy();
       }
