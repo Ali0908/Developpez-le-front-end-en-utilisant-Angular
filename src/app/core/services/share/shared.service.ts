@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OlympicService } from '../olympic.service';
 import { Olympic } from '../../models/Olympic';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -15,9 +15,6 @@ export class SharedService {
   public loadData(): Observable<{ countries: string[], medals: number[], olympics: Olympic[],
     countJOs: number, countCountries: number, years: number[] }> {
     return this.olympicService.getOlympics().pipe(
-      tap((olympics) => {
-        console.log('Fetched Olympics:', olympics);
-      }),
       map((olympics) => {
         const countries = olympics.map(olympic => olympic.country);
         const medals = olympics.map(olympic =>

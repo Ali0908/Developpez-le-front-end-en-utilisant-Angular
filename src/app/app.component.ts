@@ -15,10 +15,8 @@ export class AppComponent implements OnInit {
     this.olympicService.loadInitialData()
       .pipe(take(1))
       .subscribe({
-        next: (data) => {
+        next: () => {
           this.isLoading = true;
-          // Handle successful data loading (optional)
-          console.log('Initial data loaded successfully:', data);
         },
         error: (error) => {
           // Handle error scenario

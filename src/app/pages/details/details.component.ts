@@ -64,11 +64,14 @@ export class DetailsComponent implements OnInit, OnChanges {
       this.years = years;
       this.handleRouting(this.countries);
       this.matchCountries = this.olympics.find(olympic => olympic.country === this.countrySelected)!;
+      // Condition to avoid undefined error (matchCountries.participations)
+      if(this.matchCountries){
         this.entries = this.matchCountries.participations.length;
         this.getAthletesPerCountry();
         this.getMedalsPerCountry();
         this.createLineChart();
-       });
+      }
+      });
   }
 
   private getMedalsPerCountry(): number[] {
