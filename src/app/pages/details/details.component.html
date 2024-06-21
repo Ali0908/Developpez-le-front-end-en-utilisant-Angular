@@ -1,25 +1,26 @@
-<button mat-raised-button color="primary" (click)="goBack()">Back</button>
+<div class="general-container">
+      <button mat-raised-button color="primary" (click)="goBack()">Back</button>
+      <div class="container-component">
 
-<div class="container-component">
-
-      <div class="header">
-            <div class="header-title">{{countrySelected}}</div>
-            <div class="header-container"> 
-                  <div class="item">
-                        <p>Number of entries</p>
-                        <p><b>{{entries}}</b></p>
-                  </div>
-                  <div class="item">
-                        <p>Total number medals</p>
-                        <p><b>{{totalMedalsPerCountry}}</b></p>
-                  </div>
-                  <div class="item">
-                        <p>Total number of athletes</p>
-                        <p><b>{{totalAthletesPerCountry}}</b></p>
+            <div class="header">
+                  <div class="header-title">{{countrySelected}}</div>
+                  <div class="header-container"> 
+                        <div class="item">
+                              <p>Number of entries</p>
+                              <p><b>{{entries}}</b></p>
+                        </div>
+                        <div class="item">
+                              <p>Total number medals</p>
+                              <p><b>{{totalMedalsPerCountry}}</b></p>
+                        </div>
+                        <div class="item">
+                              <p>Total number of athletes</p>
+                              <p><b>{{totalAthletesPerCountry}}</b></p>
+                        </div>
                   </div>
             </div>
+                  <div class="line-chart">
+                        <canvas id="myChart"></canvas>
+                  </div>
       </div>
-            <div class="line-chart">
-                  <canvas id="myChart"></canvas>
-            </div>
 </div>
