@@ -7,5 +7,5 @@ export interface FormattedOlympicData {
     olympics: Olympic[];
     countJOs: number;
     countCountries: number;
-    years: number[] ;
+    years: number[];
 }

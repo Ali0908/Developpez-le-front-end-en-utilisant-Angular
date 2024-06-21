@@ -46,26 +46,31 @@ export class DetailsComponent implements OnInit, OnDestroy{
  * Loads and processes data related to the Olympics for the selected country.
  * 
  * This method fetches data using the shared service, processes it to extract the necessary details, 
- * and updates the component's state with the relevant information. It also handles routing based on 
- * the validity of the selected country.
- *
+ * and updates the component's state with the relevant information. It then creates a line chart to 
+ * visually represent the data.
  * @return void
  */
   private loadData(): void {
-    this.dataSubscription = this.sharedSrv.loadData().subscribe((formattedOlympicData: FormattedOlympicData) => {
-      this.formattedOlympicData = formattedOlympicData;
-      this.countrySelected = this.formattedOlympicData.countries[this.countryId];
-      this.matchCountries = this.formattedOlympicData.olympics.find(olympic => olympic.country === this.countrySelected)!;
-      // Condition to avoid undefined error (matchCountries.participations)
-      if(this.matchCountries){
-        this.entries = this.matchCountries.participations.length;
-        this.getAthletesPerCountry();
-        this.getMedalsPerCountry();
-        this.createLineChart();
-      } else{
-        this.router.navigate(['/**']);
+    this.dataSubscription = this.sharedSrv.loadData().subscribe({
+      next: (formattedOlympicData: FormattedOlympicData) => {
+        this.formattedOlympicData = formattedOlympicData;
+        this.matchCountries = this.formattedOlympicData.olympics.find((olympic) => olympic.id === this.countryId)!;
+        if (this.matchCountries) {
+          this.entries = this.matchCountries.participations.length;
+          this.countrySelected = this.matchCountries.country;
+          this.getMedalsPerCountry();
+          this.getAthletesPerCountry();
+          this.createLineChart();
+        } else {
+          this.router.navigate(['']);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading initial data:', error);
+        window.alert('Error loading initial data');
       }
-      });
+    }
+    );
   }
 
   private getMedalsPerCountry(): void {

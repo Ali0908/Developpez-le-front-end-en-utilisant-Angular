@@ -39,11 +39,19 @@ export class HomeComponent implements OnInit, OnDestroy {
  * @return void
  */
   private loadData(): void {
-  this.dataSubscription =  this.sharedService.loadData().subscribe(( formattedOlympicData: FormattedOlympicData) => {
-      this.formattedOlympicData = formattedOlympicData;
-      this.createPieChart();
-    });
-  }
+    this.dataSubscription =  this.sharedService.loadData().subscribe(
+      {
+        next: (formattedOlympicData: FormattedOlympicData) => {
+          this.formattedOlympicData = formattedOlympicData;
+          this.createPieChart();
+        },
+        error: (error) => {
+          console.error('Error loading initial data:', error);
+          window.alert('Error loading initial data');
+        }
+      }
+    );
+    }
 
   private createPieChart(): void {    
     let htmlRef = this.elementRef.nativeElement.querySelector(`#myfirstChart`);
@@ -69,7 +77,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         aspectRatio:2.5,
         onClick: (_event: ChartEvent, elements: ActiveElement[]) => {
           const clickedElement = elements[0];
-          const countryId = clickedElement.index;
+          const countryId = clickedElement.index + 1;
           this.router.navigate(['/details' ,  countryId]);
       }
       }
