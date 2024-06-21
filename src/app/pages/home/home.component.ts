@@ -1,36 +1,32 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { Olympic } from 'src/app/core/models/Olympic';
-import { OlympicService } from 'src/app/core/services/olympic.service';
+import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { Colors } from 'chart.js';
+import { ActiveElement, ChartEvent, Colors } from 'chart.js';
 import { Router } from '@angular/router';
-import { Observable} from 'rxjs';
+import {  Subscription} from 'rxjs';
 import { SharedService } from 'src/app/core/services/share/shared.service';
+import { FormattedOlympicData } from '../../core/models/FormattedOlympicData';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  public olympics: Olympic[] = [];
-  public olympics$!: Observable<Olympic[]>;
-  private countries: string[] = [];
-  private medals: number[] = [];
+export class HomeComponent implements OnInit, OnDestroy {
   public chart!: Chart<"pie", any, string>;
-  public countCountries: number = 0;
-  public countJOs: number = 0;
+  public formattedOlympicData!: FormattedOlympicData;
+  private dataSubscription!: Subscription;
 
   constructor(
-    private olympicService: OlympicService,
     private elementRef:ElementRef,
     private router: Router,
     private sharedService: SharedService
   ) {}
 
   ngOnInit(): void {
-    this.olympics$ = this.olympicService.getOlympics();
     this.loadData();
+  }
+  ngOnDestroy(): void{
+    this.dataSubscription.unsubscribe();
   }
 
   /**
@@ -43,12 +39,8 @@ export class HomeComponent implements OnInit {
  * @return void
  */
   private loadData(): void {
-    this.sharedService.loadData().subscribe(({ countries, medals, olympics, countJOs, countCountries }) => {
-      this.countries = countries;
-      this.medals = medals;
-      this.olympics = olympics;
-      this.countJOs = countJOs;
-      this.countCountries = countCountries;
+  this.dataSubscription =  this.sharedService.loadData().subscribe(( formattedOlympicData: FormattedOlympicData) => {
+      this.formattedOlympicData = formattedOlympicData;
       this.createPieChart();
     });
   }
@@ -64,18 +56,18 @@ export class HomeComponent implements OnInit {
     this.chart = new Chart(htmlRef, {
       type: 'pie',
       data: {
-        labels: this.countries, 
+        labels: this.formattedOlympicData.countries, 
 	      datasets: [
           {
             label: "Medals",
-            data: this.medals,
+            data: this.formattedOlympicData.medals,
         },
           
         ]
       },
       options: {
         aspectRatio:2.5,
-        onClick: (event, elements) => {
+        onClick: (_event: ChartEvent, elements: ActiveElement[]) => {
           const clickedElement = elements[0];
           const countryId = clickedElement.index;
           this.router.navigate(['/details' ,  countryId]);

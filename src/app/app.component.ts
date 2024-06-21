@@ -15,10 +15,10 @@ export class AppComponent implements OnInit {
     this.olympicService.loadInitialData()
       .pipe(take(1))
       .subscribe({
-        next: () => {
+        next:() => {
           this.isLoading = true;
         },
-        error: (error) => {
+        error:(error) => {
           // Handle error scenario
           console.error('Error loading initial data:', error);
           window.alert('Error loading initial data')

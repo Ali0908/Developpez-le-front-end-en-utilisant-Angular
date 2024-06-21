@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OlympicService } from '../olympic.service';
-import { Olympic } from '../../models/Olympic';
 import { map } from 'rxjs/operators';
+import { FormattedOlympicData } from '../../models/FormattedOlympicData';
 
 
 @Injectable({
@@ -24,17 +24,18 @@ export class SharedService {
  * - countCountries: the total number of countries
  * - years: an array of unique years in which the Olympics took place, with a 0 prepended
  */
-  public loadData(): Observable<{ countries: string[], medals: number[], olympics: Olympic[],
-    countJOs: number, countCountries: number, years: number[] }> {
-    return this.olympicService.getOlympics().pipe(
+  public loadData(): Observable< FormattedOlympicData> {
+    return  this.olympicService.getOlympics().pipe(
       map((olympics) => {
         const countries = olympics.map(olympic => olympic.country);
         const medals = olympics.map(olympic =>
           olympic.participations.reduce((acc, participation) => acc + participation.medalsCount, 0)
         );
         const countJOs = olympics.reduce((acc, olympic) => acc + olympic.participations.length, 0);
+        // supprimer les doublons de countjs fait come years 
         const countCountries = olympics.length;
-        let years = olympics.map(olympic => olympic.participations.map(participation => participation.year)).flat();
+        // let years = olympics.map(olympic => olympic.participations.map(participation => participation.year)).flat();
+        let years =  Array.from (new Set (olympics.flatMap(olympic => olympic.participations).map(participation => participation.year)));
         years = Array.from(new Set(years));
         years.unshift(0);
         return { countries, medals, olympics, countJOs, countCountries, years };
