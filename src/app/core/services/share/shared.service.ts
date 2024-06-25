@@ -13,7 +13,7 @@ export class SharedService {
   constructor(private olympicService: OlympicService) {
   }
 
-  public loadData(): Observable<FormattedOlympicData> {
+  public loadAndProcessOlympicData(): Observable<FormattedOlympicData> {
     return this.olympicService.getOlympics().pipe(
       map((olympics) => {
         const countries = olympics.map(olympic => olympic.country);

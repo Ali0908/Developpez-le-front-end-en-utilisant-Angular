@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadData();
+    this.loadFormattedOlympicData();
   }
 
   ngOnDestroy(): void {
@@ -32,8 +32,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadData(): void {
-    this.dataSubscription = this.sharedService.loadData().subscribe(
+  private loadFormattedOlympicData(): void {
+    this.dataSubscription = this.sharedService.loadAndProcessOlympicData().subscribe(
       {
         next: (formattedOlympicData: FormattedOlympicData) => {
           this.formattedOlympicData = formattedOlympicData;

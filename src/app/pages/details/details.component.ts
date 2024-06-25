@@ -36,15 +36,15 @@ export class DetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fetchCountryIdFromUrl();
-    this.loadData();
+    this.loadFormattedOlympicData();
   }
 
   ngOnDestroy(): void {
     this.dataSubscription.unsubscribe();
   }
 
-  private loadData(): void {
-    this.dataSubscription = this.sharedSrv.loadData().subscribe({
+  private loadFormattedOlympicData(): void {
+    this.dataSubscription = this.sharedSrv.loadAndProcessOlympicData().subscribe({
         next: (formattedOlympicData: FormattedOlympicData) => {
           this.formattedOlympicData = formattedOlympicData;
           this.matchCountries = this.formattedOlympicData.olympics.find((olympic) => olympic.id === this.countryId)!;
