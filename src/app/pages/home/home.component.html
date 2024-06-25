@@ -1,20 +1,22 @@
 <div class="container-component">
-    <div class="header">
-      <h1 class="header-title">Medals per country</h1>
-      <div class="header-container"> 
-        <div class="item">
-          <p>Number of JOs</p>
-          <p><b>{{formattedOlympicData.countJOs}}</b></p>
-        </div>
-        <div class="item">
-          <p>Number of countries</p>
-          <p><b>{{formattedOlympicData.countCountries}}</b></p>
-        </div>
+  <div class="header">
+    <h1 class="header-title">Medals per country</h1>
+    <div class="header-container">
+      <div class="item">
+        <p>Number of JOs</p>
+        <p><b>{{formattedOlympicData.countJOs}}</b></p>
+      </div>
+      <div class="item">
+        <p>Number of countries</p>
+        <p><b>{{formattedOlympicData.countCountries}}</b></p>
+      </div>
     </div>
     <!-- <div style="width: 500px;"><canvas id="dimensions"></canvas></div><br/> -->
-    <div class="chart-container"><canvas id="myfirstChart"></canvas></div>
+    <div class="chart-container">
+      <canvas id="myfirstChart"></canvas>
+    </div>
   </div>
 </div>
-  <script type="module" src="acquisitions.js"></script>
+<script type="module" src="acquisitions.js"></script>
 
 

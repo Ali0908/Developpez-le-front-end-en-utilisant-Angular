@@ -1,11 +1,10 @@
-import { Olympic } from "./Olympic";
-
+import {Olympic} from "./Olympic";
 
 export interface FormattedOlympicData {
-    countries: string[];
-    medals: number[];
-    olympics: Olympic[];
-    countJOs: number;
-    countCountries: number;
-    years: number[];
+  countries: string[];
+  medals: number[];
+  olympics: Olympic[];
+  countJOs: number;
+  countCountries: number;
+  years: number[];
 }

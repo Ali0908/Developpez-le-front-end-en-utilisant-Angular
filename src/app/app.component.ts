@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { take } from 'rxjs';
-import { OlympicService } from './core/services/olympic.service';
+import {Component, OnInit} from '@angular/core';
+import {take} from 'rxjs';
+import {OlympicService} from './core/services/olympic.service';
 
 @Component({
   selector: 'app-root',
@@ -8,17 +8,18 @@ import { OlympicService } from './core/services/olympic.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  constructor(private olympicService: OlympicService) {}
+  constructor(private olympicService: OlympicService) {
+  }
   isLoading = false;
 
   ngOnInit(): void {
     this.olympicService.loadInitialData()
       .pipe(take(1))
       .subscribe({
-        next:() => {
+        next: () => {
           this.isLoading = true;
         },
-        error:(error) => {
+        error: (error) => {
           // Handle error scenario
           console.error('Error loading initial data:', error);
           window.alert('Error loading initial data')
