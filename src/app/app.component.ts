@@ -20,7 +20,6 @@ export class AppComponent implements OnInit {
           this.isLoading = true;
         },
         error: (error) => {
-          // Handle error scenario
           console.error('Error loading initial data:', error);
           window.alert('Error loading initial data')
         },

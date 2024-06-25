@@ -31,15 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.dataSubscription.unsubscribe();
   }
 
-  /**
-   * Loads and processes data related to the Olympics.
-   *
-   * This method fetches data using the shared service, processes it to extract the necessary details,
-   * and updates the component's state with the relevant information. It then creates a pie chart to
-   * visually represent the data.
-   *
-   * @return void
-   */
+
   private loadData(): void {
     this.dataSubscription = this.sharedService.loadData().subscribe(
       {

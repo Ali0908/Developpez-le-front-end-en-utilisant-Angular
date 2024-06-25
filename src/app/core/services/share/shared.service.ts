@@ -13,11 +13,6 @@ export class SharedService {
   constructor(private olympicService: OlympicService) {
   }
 
-  /**
-   * Loads and processes data related to the Olympics.
-   *
-   * @return Observable<{FormattedOlympicData}>
-   */
   public loadData(): Observable<FormattedOlympicData> {
     return this.olympicService.getOlympics().pipe(
       map((olympics) => {
