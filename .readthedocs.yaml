@@ -8,12 +8,7 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
-    nodejs: 14
+    nodejs: "14"
 
 mkdocs:
   configuration: mkdocs.yml
-
-# Optionally declare the Python requirements required to build your docs
-python:
-  install:
-    - requirements: docs/requirements.txt
