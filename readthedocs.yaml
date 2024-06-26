@@ -1,35 +1,18 @@
-# Olympic Data Documentation
-# ========================
+# Read the Docs configuration file
+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
 
-:Author: Ali
+# Required
 version: 2
-:License: Creative Commons
 
-contents:
-:depth: 1
+# Set the OS
+build:
+  command: ng build
+  tools:
+   nodejs: "14"
 
-  Introduction
-  ------------
-
-  This documentation highlights the most important elements to **install** and to **configure** your app.
-
-  Technologies
-  ------------
-
-  * TS
-  * SASS
-  * HTML
-
-  Installing the app
-  ------------------
-  npm install
-
-  Building the app
-  ------------------
-  ng build
-
-  Run the app
-  ------------------
-  ng serve
-
+  commands:
+  #  - Install the dependencies of your project
+  - npm install
+  #  - Run server
+  - ng serve
 
