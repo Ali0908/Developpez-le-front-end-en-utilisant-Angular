@@ -1,0 +1,18 @@
+site_name: Olympic Games Starter Documentation
+theme:
+  name: material
+
+nav:
+  - Home: docs/index.md
+  - Guide:
+      - Introduction: docs/guide/introduction.md
+      - Development: docs/guide/development.md
+      - Build: docs/guide/build.md
+      - Architecture: docs/guide/architecture.md
+  - API Reference: docs/api.md
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - tables
+  - admonition
