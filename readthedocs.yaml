@@ -1,11 +1,11 @@
-# Sleep Well Documentation
+# Olympic Data Documentation
 # ========================
 
-:Author: Francis
-:Version: 1.0
+:Author: Ali
+version: 2
 :License: Creative Commons
 
-  .. contents::
+ .. contents::
 :depth: 1
 
   Introduction
@@ -16,12 +16,20 @@
   Technologies
   ------------
 
-  * JS
-  * CSS
+  * TS
+  * SASS
   * HTML
 
   Installing the app
   ------------------
+  npm install
 
-...
-  $ npm install
+  Building the app
+  ------------------
+  ng build
+
+  Run the app
+  ------------------
+  ng serve
+
+
