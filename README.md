@@ -1,4 +1,7 @@
-# OlympicGamesStarter
+# Olympic Games Project
+
+##  Presentation
+The purpose of this application is to provide information in graphic form on past Olympic Games.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.3.
 
