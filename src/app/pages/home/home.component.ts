@@ -49,10 +49,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private createPieChart(): void {
     let htmlRef = this.elementRef.nativeElement.querySelector(`#myfirstChart`);
-    // Destroy the graphic if it already exists
-    if (this.chart) {
-      this.chart.destroy();
-    }
     Chart.register(Colors);
 
     this.chart = new Chart(htmlRef, {

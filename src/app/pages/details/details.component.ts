@@ -58,7 +58,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
             this.router.navigate(['**']);
           }
         },
-        error: (error) => {
+        error: (error): void => {
           console.error('Error loading initial data:', error);
           window.alert('Error loading initial data');
         }

@@ -8,15 +8,15 @@ import {Olympic} from '../models/Olympic';
   providedIn: 'root',
 })
 export class OlympicService {
-  private olympicUrl = './assets/mock/olympic.json';
-  private olympics$ = new BehaviorSubject<Olympic[]>([]);
+  private olympicUrl: string = './assets/mock/olympic.json';
+  private olympics$: BehaviorSubject<Olympic[]> = new BehaviorSubject<Olympic[]>([]);
 
   constructor(private http: HttpClient) {
   }
 
   loadInitialData(): Observable<Olympic[]> {
     return this.http.get<Olympic[]>(this.olympicUrl).pipe(
-      tap((value) => this.olympics$.next(value)),
+      tap((value: Olympic[]) => this.olympics$.next(value)),
       catchError((error) => {
         console.error(error);
         this.olympics$.next([]);
