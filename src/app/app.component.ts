@@ -9,7 +9,7 @@ import {OlympicService} from './core/services/olympic.service';
 export class AppComponent implements OnInit, OnDestroy {
   constructor(private olympicService: OlympicService) {
   }
-  isLoading = false;
+  public isLoading = false;
   private dataSubscription!: Subscription;
 
   ngOnInit(): void {
