@@ -1,19 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {take} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription, take, window} from 'rxjs';
 import {OlympicService} from './core/services/olympic.service';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   constructor(private olympicService: OlympicService) {
   }
   isLoading = false;
+  private dataSubscription!: Subscription;
 
   ngOnInit(): void {
-    this.olympicService.loadInitialData()
+  this.dataSubscription =  this.olympicService.loadInitialData()
       .pipe(take(1))
       .subscribe({
         next: () => {
@@ -21,8 +21,12 @@ export class AppComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error loading initial data:', error);
-          window.alert('Error loading initial data')
+          window.alert('Error loading initial data');
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.dataSubscription.unsubscribe();
   }
 }
