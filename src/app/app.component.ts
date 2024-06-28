@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Subscription, take, window} from 'rxjs';
+import {Subscription, take} from 'rxjs';
 import {OlympicService} from './core/services/olympic.service';
 @Component({
   selector: 'app-root',
